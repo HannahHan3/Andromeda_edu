@@ -12,6 +12,7 @@ from skimage.transform import resize
 import csv
 from functools import partial
 from tqdm import tqdm
+from zipfile import ZipFile
 
 from os import listdir
 from os.path import isfile, join
@@ -716,28 +717,26 @@ def draw_plot(ax, data2D, imgSize, title=False, image=True):
     ax.set_yticks([])
     ax.axis('equal')
 
-    
-# from tkinter import Tk, filedialog
-# from IPython.display import clear_output
+is_zipped = os.path.isdir('./dataFolder/') 
+for (dirpath, dirnames, filenames) in os.walk('./dataset/'):
+    for filename in filenames:
+        if filename.lower().endswith('zip') and not is_zipped:
+            with ZipFile(filename, 'r') as zipObj:
+                os.mkdir('./dataFolder/')
+                zipObj.extractall('./dataFolder/')
+            is_zipped = True
 
-# def get_img_folder():
-#     folder = []
-#     def select_files(b):
-#         clear_output()
-#         root = Tk()
-#         root.withdraw() # Hide the main window.
-#         root.call('wm', 'attributes', '.', '-topmost', True) # Raise the root to the top of all windows.
-#         folder.append(filedialog.askdirectory()) # List of selected files will be set button's file attribute.
-
-#     folderselect_button = widgets.Button(description="File select")
-#     folderselect_button.on_click(select_files)
-#     display(folderselect_button)
-#     return folder
+for path in os.listdir('./dataFolder/'):
+    if os.path.isdir(path) and not path.lower().startswith("_"):
+        imgFolder = './dataFolder/' + path + '/'
+for path in os.listdir(imgFolder):
+    if path.lower().endswith('.csv'):
+        csvfile = imgFolder + path
 
 
-imgFolder = '/users/huiminhan/Desktop/Lab/InfoVis/Datasets/leaf/'
+# imgFolder = '/users/huiminhan/Desktop/Lab/InfoVis/Datasets/leaf/'
 # imgFolder = get_img_folder()[0]
-csvfile = '/users/huiminhan/Desktop/Lab/InfoVis/Datasets/leaf/leaf.csv'
+# csvfile = '/users/huiminhan/Desktop/Lab/InfoVis/Datasets/leaf/leaf.csv'
 sampleSizePerCat = 1 #sample size for each image category subfolder
 imgDisplaySize =0.4  #default value for image display size, can be interactively adjusted in the UI
 total_img = 50 # maximun total number of images to display on the UI
