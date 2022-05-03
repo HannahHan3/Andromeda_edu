@@ -3,3 +3,4 @@
 jupyter contrib nbextension install --user
 jupyter nbextensions_configurator enable --user
 jupyter nbextension enable splitcell/splitcell
+jupyter nbextension enable hide_input_all/main
