@@ -721,14 +721,15 @@ is_zipped = os.path.isdir('./dataFolder/')
 for (dirpath, dirnames, filenames) in os.walk('./dataset/'):
     for filename in filenames:
         if filename.lower().endswith('zip') and not is_zipped:
-            with ZipFile(filename, 'r') as zipObj:
+            with ZipFile('./dataset/'+filename, 'r') as zipObj:
                 os.mkdir('./dataFolder/')
                 zipObj.extractall('./dataFolder/')
             is_zipped = True
 
 for path in os.listdir('./dataFolder/'):
-    if os.path.isdir(path) and not path.lower().startswith("_"):
+    if os.path.isdir('./dataFolder/'+path) and not path.lower().startswith("_"):
         imgFolder = './dataFolder/' + path + '/'
+        break
 for path in os.listdir(imgFolder):
     if path.lower().endswith('.csv'):
         csvfile = imgFolder + path
