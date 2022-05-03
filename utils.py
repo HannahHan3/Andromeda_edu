@@ -741,27 +741,26 @@ def draw_plot(ax, data2D, imgSize, title=False, image=True):
     ax.set_yticks([])
     ax.axis('equal')
 
-is_zipped = os.path.isdir('./dataFolder/') 
-for (dirpath, dirnames, filenames) in os.walk('./dataset/'):
-    for filename in filenames:
-        if filename.lower().endswith('zip') and not is_zipped:
-            with ZipFile('./dataset/'+filename, 'r') as zipObj:
-                os.mkdir('./dataFolder/')
-                zipObj.extractall('./dataFolder/')
-            is_zipped = True
+# is_zipped = os.path.isdir('./dataFolder/') 
+# for (dirpath, dirnames, filenames) in os.walk('./dataset/'):
+#     for filename in filenames:
+#         if filename.lower().endswith('zip') and not is_zipped:
+#             with ZipFile('./dataset/'+filename, 'r') as zipObj:
+#                 os.mkdir('./dataFolder/')
+#                 zipObj.extractall('./dataFolder/')
+#             is_zipped = True
 
-for path in os.listdir('./dataFolder/'):
-    if os.path.isdir('./dataFolder/'+path) and not path.lower().startswith("_"):
-        imgFolder = './dataFolder/' + path + '/'
-        break
-for path in os.listdir(imgFolder):
-    if path.lower().endswith('.csv'):
-        csvfile = imgFolder + path
+# for path in os.listdir('./dataFolder/'):
+#     if os.path.isdir('./dataFolder/'+path) and not path.lower().startswith("_"):
+#         imgFolder = './dataFolder/' + path + '/'
+#         break
+# for path in os.listdir(imgFolder):
+#     if path.lower().endswith('.csv'):
+#         csvfile = imgFolder + path
 
 
-# imgFolder = '/users/huiminhan/Desktop/Lab/InfoVis/Datasets/leaf/'
-# imgFolder = get_img_folder()[0]
-# csvfile = '/users/huiminhan/Desktop/Lab/InfoVis/Datasets/leaf/leaf.csv'
+imgFolder = './dataset/leaf/'
+csvfile = './dataset/leaf/leaf.csv'
 sampleSizePerCat = 1 #sample size for each image category subfolder
 imgDisplaySize =0.4  #default value for image display size, can be interactively adjusted in the UI
 total_img = 50 # maximun total number of images to display on the UI
