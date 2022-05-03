@@ -761,7 +761,7 @@ def draw_plot(ax, data2D, imgSize, title=False, image=True):
 
 imgFolder = './dataset/leaf/'
 csvfile = './dataset/leaf/leaf.csv'
-sampleSizePerCat = 1 #sample size for each image category subfolder
+sampleSizePerCat = 10 #sample size for each image category subfolder
 imgDisplaySize =0.4  #default value for image display size, can be interactively adjusted in the UI
 total_img = 50 # maximun total number of images to display on the UI
 folderName = True #whether the imgFolder has subfolder for each category. e.g. the fish dataset
