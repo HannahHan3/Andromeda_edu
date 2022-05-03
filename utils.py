@@ -37,12 +37,16 @@ import ipyplot
 
 import torch
 from torch.utils.data import Dataset, DataLoader
-from torchvision.transforms import ToTensor
-from torchvision import transforms
+# from torchvision.transforms import ToTensor
+# from torchvision import transforms
 
 
 ## see VisualBackProp.py
-import VisualBackProp as VBP
+# import VisualBackProp as VBP
+
+
+
+
 
 def get_path(imgFolder,sampleSizePerCat,folderName, max_img_num=50):
     """    
@@ -85,6 +89,26 @@ def extractIdx_pattern(path, folderName):
         pattern = path.split('/')[-1].split('.')[-2]
     return pattern
 
+class FilenameDataset(Dataset):
+
+    def __init__(self, files, transform=None):
+        self.files = list(files)
+        self.transform = transform
+
+    def __len__(self):
+        return len(self.files)
+
+    def __getitem__(self, idx):
+        sample = Image.open(self.files[idx]).convert('RGB')
+        if self.transform:
+            return self.transform(sample)
+        transform_default = transforms.Compose([
+                transforms.Resize((224,224)),
+                transforms.ToTensor(),
+                transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+            ])
+        return transform_default(sample)
+
 
 def data_loader(imgIdx_path):
     """
@@ -93,7 +117,7 @@ def data_loader(imgIdx_path):
     @return: image loader
     """
 
-    dataset = VBP.FilenameDataset(imgIdx_path.values())
+    dataset = FilenameDataset(imgIdx_path.values())
     loader = DataLoader(dataset)
     if loader:
         print("{} images loaded".format(len(loader)))
@@ -102,25 +126,25 @@ def data_loader(imgIdx_path):
         print("Invalid path")
         return
     
-def feature_extractor(model, loader, imgIdx_path, folderName):
-    """
-    use a NN model to extract features from loaded images
-    @parameters:
-        model[neuron network]: model used to extract features
-        loader: image loader returned from the data_loader function
-    @return[dataframe]: a dataframe of extracted features indexing by image index(get from extractIdx_pattern function)
-    """
-    features=[]
-    for i, img in zip(range(len(loader)), loader):
-        with torch.no_grad():
-            x, vis, target_feature_map = model(img)
-            features.append(x)
-        index = []
-        for path in imgIdx_path.values():
-            index.append(extractIdx_pattern(path, folderName))
-    dfImage = pd.DataFrame(features,columns = [str(i) for i in range(1,513)],index = index)
-    dfImage.index.name = 'Image'
-    return dfImage
+# def feature_extractor(model, loader, imgIdx_path, folderName):
+#     """
+#     use a NN model to extract features from loaded images
+#     @parameters:
+#         model[neuron network]: model used to extract features
+#         loader: image loader returned from the data_loader function
+#     @return[dataframe]: a dataframe of extracted features indexing by image index(get from extractIdx_pattern function)
+#     """
+#     features=[]
+#     for i, img in zip(range(len(loader)), loader):
+#         with torch.no_grad():
+#             x, vis, target_feature_map = model(img)
+#             features.append(x)
+#         index = []
+#         for path in imgIdx_path.values():
+#             index.append(extractIdx_pattern(path, folderName))
+#     dfImage = pd.DataFrame(features,columns = [str(i) for i in range(1,513)],index = index)
+#     dfImage.index.name = 'Image'
+#     return dfImage
 
 def load_meta_data(path):
     """
@@ -452,75 +476,75 @@ def create_reset_buttons(ax, size_slider, sliders):
 
 
 ## Visual Back Prop button
-def create_visual_explainations(ax):
-    """
-    @return[button]: return button and plot Visual Backprop map
-    """
+# def create_visual_explainations(ax):
+#     """
+#     @return[button]: return button and plot Visual Backprop map
+#     """
     
-    print_button = widgets.Button(description='Visual Explainations')
-    print_output = widgets.Output()
+#     print_button = widgets.Button(description='Visual Explainations')
+#     print_output = widgets.Output()
     
-    def transformer():
-        """
-        transformer for image dataset, using the ImageNet mean and std since Resnet18 is pre-trained on ImageNet
-        """
-        transformer = transforms.Compose([
-                transforms.Resize((224,224)),
-                transforms.ToTensor(),
-                transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
-            ])
-        return transformer
+#     def transformer():
+#         """
+#         transformer for image dataset, using the ImageNet mean and std since Resnet18 is pre-trained on ImageNet
+#         """
+#         transformer = transforms.Compose([
+#                 transforms.Resize((224,224)),
+#                 transforms.ToTensor(),
+#                 transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+#             ])
+#         return transformer
     
     
-    def plot_VBP_map(loader, model_bp):
-        if len(loader) > 0:
-            # set number of columns (use 3 to demonstrate the change)
-            ncols = 2
-            # calculate number of rows
-            nrows = len(loader)
+#     def plot_VBP_map(loader, model_bp):
+#         if len(loader) > 0:
+#             # set number of columns (use 3 to demonstrate the change)
+#             ncols = 2
+#             # calculate number of rows
+#             nrows = len(loader)
             
-            plt.figure(figsize = (6,10))
-            for i, img in zip(range(len(loader)), loader):
-                with torch.no_grad():
-                    x, vis, feature_map = model_bp(img)                   
-                vis = vis[0].numpy().transpose(1,2,0)[:,:,0]
-                vis = np.interp(vis, [vis.min(), vis.max()], [0,1])
-                img = img[0].numpy().transpose(1,2,0)
-                img = np.interp(img, [img.min(), img.max()], [0,1])
-                plt.subplot(nrows, ncols, 2*i+1)
-                plt.imshow(img, interpolation='bilinear')
-                plt.axis('off')
-                plt.subplot(nrows,ncols,2*(i+1))
-                plt.imshow(vis, cmap='viridis', interpolation='bilinear')
-                plt.axis('off')
-            plt.tight_layout()
-            plt.show()
-        else:
-            print('Select points in the plot to see details here')
+#             plt.figure(figsize = (6,10))
+#             for i, img in zip(range(len(loader)), loader):
+#                 with torch.no_grad():
+#                     x, vis, feature_map = model_bp(img)                   
+#                 vis = vis[0].numpy().transpose(1,2,0)[:,:,0]
+#                 vis = np.interp(vis, [vis.min(), vis.max()], [0,1])
+#                 img = img[0].numpy().transpose(1,2,0)
+#                 img = np.interp(img, [img.min(), img.max()], [0,1])
+#                 plt.subplot(nrows, ncols, 2*i+1)
+#                 plt.imshow(img, interpolation='bilinear')
+#                 plt.axis('off')
+#                 plt.subplot(nrows,ncols,2*(i+1))
+#                 plt.imshow(vis, cmap='viridis', interpolation='bilinear')
+#                 plt.axis('off')
+#             plt.tight_layout()
+#             plt.show()
+#         else:
+#             print('Select points in the plot to see details here')
         
     
-    def feature_button_clicked(change):
-        print_output.clear_output()
-        # Get list of selected points and print their source data values
-        c_index = [c.index for c in ax.circles if c.selected]        
-        s_index =list(df.iloc[c_index, :].index)    
-        weights_list = torch.tensor(np.float32(weights))
-        files = []
-        for i in s_index:
-            files.append(imageIndex_path_dict[i])
+#     def feature_button_clicked(change):
+#         print_output.clear_output()
+#         # Get list of selected points and print their source data values
+#         c_index = [c.index for c in ax.circles if c.selected]        
+#         s_index =list(df.iloc[c_index, :].index)    
+#         weights_list = torch.tensor(np.float32(weights))
+#         files = []
+#         for i in s_index:
+#             files.append(imageIndex_path_dict[i])
         
-        ## this transformer is for pre-trained model on ImageNet dataset    
-        transform = transformer()
-        ds = VBP.FilenameDataset(files, transform)
-        loader = DataLoader(ds)
-        global model_bp
-        with print_output:
-            plot_VBP_map(loader, model_bp)
+#         ## this transformer is for pre-trained model on ImageNet dataset    
+#         transform = transformer()
+#         ds = VBP.FilenameDataset(files, transform)
+#         loader = DataLoader(ds)
+#         global model_bp
+#         with print_output:
+#             plot_VBP_map(loader, model_bp)
 
-    print_button.on_click(feature_button_clicked)
-    display(print_button)
-    display(print_output)
-    return print_button, print_output
+#     print_button.on_click(feature_button_clicked)
+#     display(print_button)
+#     display(print_output)
+#     return print_button, print_output
 
 ## inverse DR button
 def create_inverse_button(ax, size_slider, sliders, fig_show=False):
@@ -749,8 +773,8 @@ is_CNN_extract_features = False
 imageIndex_path_dict = get_path(imgFolder,sampleSizePerCat,folderName=folderName, max_img_num=total_img)
 paths = imageIndex_path_dict.values()
 img_loader = data_loader(imageIndex_path_dict)
-model = VBP.resnet18(pretrained=True).eval()
-model_bp = VBP.ResnetVisualizer(model.eval(),weight_list=torch.ones([512]))
+# model = VBP.resnet18(pretrained=True).eval()
+# model_bp = VBP.ResnetVisualizer(model.eval(),weight_list=torch.ones([512]))
 
 dfMeta = load_meta_data(csvfile)
 dfMeta.index = dfMeta.apply(lambda x: str(int(x['Class(Species)'])) +'_' + str(int(x['Specimen Number'])), axis = 1)
