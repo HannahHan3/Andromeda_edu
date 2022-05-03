@@ -1,5 +1,6 @@
 jupyter_contrib_nbextensions
 numpy
+iPython
 ipympl
 pandas
 python-math
