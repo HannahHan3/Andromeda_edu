@@ -17,6 +17,4 @@ Thoughts:
 
 postbuild shell command file: postBuild
 
-plant image annotation: https://github.com/tzutalin/labelImg
-
-https://labelbox.com/
+plant image annotation: https://github.com/tzutalin/labelImg, https://labelbox.com/ update: got response from songli's group: https://www.robots.ox.ac.uk/~vgg/software/via/
