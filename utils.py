@@ -793,15 +793,15 @@ weights = get_weights(min_weight, max_weight, normalized_df.columns)
 df_2D = dimension_reduction(normalized_df, weights)   # the current projected data
 
 
-# from IPython.display import HTML
-# import random
-# # from IPython.core.display import display, HTML
-# display(HTML("<style>.container { width:95% !important; }</style>"))
-# display(HTML("<style>.output_result { max-width:100% !important; }</style>"))
-# # display(HTML("<style>.prompt { display:none !important; }</style>"))
-# display(HTML('''<style>
-#     .widget-label { min-width: 20ex !important; }
-# </style>'''))
+from IPython.display import HTML
+import random
+# from IPython.core.display import display, HTML
+display(HTML("<style>.container { width:95% !important; }</style>"))
+display(HTML("<style>.output_result { max-width:100% !important; }</style>"))
+# display(HTML("<style>.prompt { display:none !important; }</style>"))
+display(HTML('''<style>
+    .widget-label { min-width: 20ex !important; }
+</style>'''))
 
 
 
