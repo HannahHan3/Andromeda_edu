@@ -741,26 +741,26 @@ def draw_plot(ax, data2D, imgSize, title=False, image=True):
     ax.set_yticks([])
     ax.axis('equal')
 
-is_zipped = os.path.isdir('./dataFolder/') 
-for (dirpath, dirnames, filenames) in os.walk('./dataset/'):
-    for filename in filenames:
-        if filename.lower().endswith('zip') and not is_zipped:
-            with ZipFile('./dataset/'+filename, 'r') as zipObj:
-                os.mkdir('./dataFolder/')
-                zipObj.extractall('./dataFolder/')
-            is_zipped = True
+# is_zipped = os.path.isdir('./dataFolder/') 
+# for (dirpath, dirnames, filenames) in os.walk('./dataset/'):
+#     for filename in filenames:
+#         if filename.lower().endswith('zip') and not is_zipped:
+#             with ZipFile('./dataset/'+filename, 'r') as zipObj:
+#                 os.mkdir('./dataFolder/')
+#                 zipObj.extractall('./dataFolder/')
+#             is_zipped = True
 
-for path in os.listdir('./dataFolder/'):
-    if os.path.isdir('./dataFolder/'+path) and not path.lower().startswith("_"):
-        imgFolder = './dataFolder/' + path + '/'
-        break
-for path in os.listdir(imgFolder):
-    if path.lower().endswith('.csv'):
-        csvfile = imgFolder + path
+# for path in os.listdir('./dataFolder/'):
+#     if os.path.isdir('./dataFolder/'+path) and not path.lower().startswith("_"):
+#         imgFolder = './dataFolder/' + path + '/'
+#         break
+# for path in os.listdir(imgFolder):
+#     if path.lower().endswith('.csv'):
+#         csvfile = imgFolder + path
 
 
-# imgFolder = './dataset/leaf/'
-# csvfile = './dataset/leaf/leaf.csv'
+imgFolder = './dataset/leaf/'
+csvfile = './dataset/leaf/leaf.csv'
 sampleSizePerCat = 10 #sample size for each image category subfolder
 imgDisplaySize =0.4  #default value for image display size, can be interactively adjusted in the UI
 total_img = 50 # maximun total number of images to display on the UI
@@ -792,7 +792,10 @@ init_weight, min_weight, max_weight = 0.00001, 0.00001, 0.9999
 weights = get_weights(min_weight, max_weight, normalized_df.columns)
 df_2D = dimension_reduction(normalized_df, weights)   # the current projected data
 
-from IPython.core.display import display, HTML
+
+from IPython.display import HTML
+import random
+# from IPython.core.display import display, HTML
 display(HTML("<style>.container { width:95% !important; }</style>"))
 display(HTML("<style>.output_result { max-width:100% !important; }</style>"))
 # display(HTML("<style>.prompt { display:none !important; }</style>"))
@@ -800,6 +803,41 @@ display(HTML('''<style>
     .widget-label { min-width: 20ex !important; }
 </style>'''))
 
+
+
+def hide_toggle(for_next=False):
+    this_cell = """$('div.cell.code_cell.rendered.selected')"""
+    next_cell = this_cell + '.next()'
+
+    toggle_text = 'Toggle show/hide'  # text shown on toggle link
+    target_cell = this_cell  # target cell to control with toggle
+    js_hide_current = ''  # bit of JS to permanently hide code in current cell (only when toggling next cell)
+
+    if for_next:
+        target_cell = next_cell
+        toggle_text += ' next cell'
+        js_hide_current = this_cell + '.find("div.input").hide();'
+
+    js_f_name = 'code_toggle_{}'.format(str(random.randint(1,2**64)))
+
+    html = """
+        <script>
+            function {f_name}() {{
+                {cell_selector}.find('div.input').toggle();
+            }}
+
+            {js_hide_current}
+        </script>
+
+        <a href="javascript:{f_name}()">{toggle_text}</a>
+    """.format(
+        f_name=js_f_name,
+        cell_selector=target_cell,
+        js_hide_current=js_hide_current, 
+        toggle_text=toggle_text
+    )
+
+    return HTML(html)
 
 
     
