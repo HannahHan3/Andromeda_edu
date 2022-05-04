@@ -9,7 +9,7 @@ Thoughts:
 * Speedup binder: [! See Use GitHub Actions To Cache The Build For BinderHub
 ](https://github.com/jupyterhub/repo2docker-action#use-github-actions-to-cache-the-build-for-binderhub)
 
-* if use jupyterlab in binder, users can upload a zip file of the image data then could add code to unzip
+* if use jupyterlab in binder, users can upload a zip file of the image data then could add code to unzip (if jupyter notebook, then widgets.selectFile, widgets.FileUpload)
 * split cells in binder: jupyter nbextensions
 * web from jupyternotebook with binder: voila
 
