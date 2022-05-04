@@ -12,3 +12,7 @@ Thoughts:
 * if use jupyterlab in binder, users can upload a zip file of the image data then could add code to unzip
 * split cells in binder: jupyter nbextensions
 * web from jupyternotebook with binder: voila
+
+
+
+postbuild shell command file: postBuild
