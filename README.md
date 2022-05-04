@@ -12,7 +12,7 @@ Thoughts:
 * if use jupyterlab in binder, users can upload a zip file of the image data then could add code to unzip (if jupyter notebook, then widgets.selectFile, widgets.FileUpload)
 * split cells in binder: jupyter nbextensions
 * web from jupyternotebook with binder: voila
-
+* Categorical variables
 
 
 postbuild shell command file: postBuild
