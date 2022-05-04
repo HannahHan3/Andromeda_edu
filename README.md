@@ -16,3 +16,5 @@ Thoughts:
 
 
 postbuild shell command file: postBuild
+
+plant image annotation: https://github.com/tzutalin/labelImg
