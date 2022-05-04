@@ -10,4 +10,5 @@ Thoughts:
 ](https://github.com/jupyterhub/repo2docker-action#use-github-actions-to-cache-the-build-for-binderhub)
 
 * if use jupyterlab in binder, users can upload a zip file of the image data then could add code to unzip
-* split cells in binder
+* split cells in binder: jupyter nbextensions
+* web from jupyternotebook with binder: voila
